@@ -1,0 +1,8 @@
+{
+  "name": "wakelock",
+  "description": "keep screen on",
+  "uuid": "wakelock@ixchele.github.io",
+  "shell-version": [
+    "42"
+  ]
+}
