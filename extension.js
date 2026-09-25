@@ -27,7 +27,7 @@ class Indicator extends PanelMenu.Button {
 
         // Set default icon
         this._icon = new St.Icon({
-            icon_name: 'system-lock-screen-symbolic',
+            icon_name: 'view-conceal-symbolic.symbolic.png',
             style_class: 'system-status-icon',
         });
         this.add_child(this._icon);
@@ -46,7 +46,7 @@ class Indicator extends PanelMenu.Button {
     _toggleWakelock(state) {
         if (state) {
             // Extension is ON
-            this._icon.icon_name = 'display-brightness-symbolic';
+            this._icon.icon_name = 'view-reveal-symbolic.symbolic.png';
             
             // Trigger immediately the first time
             this._simulateActivity();
@@ -62,7 +62,7 @@ class Indicator extends PanelMenu.Button {
             );
         } else {
             // Extension is OFF
-            this._icon.icon_name = 'system-lock-screen-symbolic';
+            this._icon.icon_name = 'view-conceal-symbolic.symbolic.png';
             this._stopTimer();
         }
     }
