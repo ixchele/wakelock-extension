@@ -25,17 +25,14 @@ class Indicator extends PanelMenu.Button {
         this._timeoutId = null;
         this._intervalSeconds = 60;
 
-        // Set default icon
         this._icon = new St.Icon({
             icon_name: 'view-conceal-symbolic.symbolic.png',
             style_class: 'system-status-icon',
         });
         this.add_child(this._icon);
 
-        // Create a native toggle switch in the dropdown menu
         this._switchItem = new PopupMenu.PopupSwitchMenuItem('Prevent Screen Lock', false);
         
-        // Listen to the switch state changes
         this._switchItem.connect('toggled', (item, state) => {
             this._toggleWakelock(state);
         });
@@ -44,35 +41,30 @@ class Indicator extends PanelMenu.Button {
     }
 
     _toggleWakelock(state) {
+        this._stopTimer();
+
         if (state) {
-            // Extension is ON
             this._icon.icon_name = 'view-reveal-symbolic.symbolic.png';
-            
-            // Trigger immediately the first time
             this._simulateActivity();
             
-            // Start the background loop
             this._timeoutId = GLib.timeout_add_seconds(
                 GLib.PRIORITY_DEFAULT,
                 this._intervalSeconds,
                 () => {
                     this._simulateActivity();
-                    return true; // Keep the timer running
+                    return GLib.SOURCE_CONTINUE;
                 }
             );
         } else {
-            // Extension is OFF
             this._icon.icon_name = 'view-conceal-symbolic.symbolic.png';
-            this._stopTimer();
         }
     }
 
     _simulateActivity() {
         try {
-            // Execute xdotool in the background
             GLib.spawn_command_line_async('xdotool key Shift_L');
         } catch (e) {
-            log('FT Lock Defeater Error: Failed to execute xdotool - ' + e);
+            global.logError('FT Lock Defeater Error: ' + e.message);
         }
     }
 
@@ -84,7 +76,6 @@ class Indicator extends PanelMenu.Button {
     }
 
     destroy() {
-        // Clean up the timer when extension is disabled
         this._stopTimer();
         super.destroy();
     }
